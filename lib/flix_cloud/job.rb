@@ -55,7 +55,7 @@ class FlixCloud::Job < FlixCloud::Record
   end
 
   def save!
-    raise FlixCloud::SaveError unless save
+    raise FlixCloud::SaveError.new(error_messages) unless save
     true
   end
 
@@ -67,7 +67,7 @@ class FlixCloud::Job < FlixCloud::Record
 
   def self.create!(attrs={})
     job = create(attrs)
-    raise FlixCloud::CreateError unless job.id
+    raise FlixCloud::CreateError.new(job.error_messages) unless job.id
     job
   end
 
@@ -144,6 +144,9 @@ class FlixCloud::Job < FlixCloud::Record
     xml.target!
   end
 
+  def error_messages
+    errors.join(', ')
+  end
 
 protected
 
